@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Todo } from '../../types/Todo';
 import { TodoLoader } from '../TodoLoader/TodoLoader';
 
@@ -6,9 +7,16 @@ type Props = {
   deleteTodo?: (todoId: number) => void;
 };
 
-export const TodoCard: React.FC<Props> = ({ todo, deleteTodo = () => { } }) => {
-  const handleDelete = () => {
-    deleteTodo(todo.id);
+export const TodoCard: React.FC<Props> = ({ todo, deleteTodo = () => {} }) => {
+  const [isActiveLoader, setisActiveLoader] = useState(false);
+
+  const handleDelete = async () => {
+    setisActiveLoader(true);
+    try {
+      await deleteTodo?.(todo.id);
+    } finally {
+      setisActiveLoader(false);
+    }
   };
 
   return (
@@ -34,8 +42,12 @@ export const TodoCard: React.FC<Props> = ({ todo, deleteTodo = () => { } }) => {
       >
         ×
       </button>
-      {/* overlay will cover the todo while it is being deleted or updated */}
-      {todo.id === 0 ? <TodoLoader /> : null}
+
+      {todo.id === 0 ? (
+        <TodoLoader isActiveLoader={true} />
+      ) : (
+        <TodoLoader isActiveLoader={isActiveLoader} />
+      )}
     </div>
   );
 };

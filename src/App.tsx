@@ -18,6 +18,12 @@ export const App: React.FC = () => {
 
   const [filter, setFilter] = useState<FilterNav>('all');
 
+  const hideError = () => {
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 3000);
+  };
+
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -27,9 +33,7 @@ export const App: React.FC = () => {
       } catch (error) {
         setErrorMessage('Unable to load todos');
 
-        setTimeout(() => {
-          setErrorMessage('');
-        }, 3000);
+        hideError();
       }
     };
 
@@ -47,8 +51,9 @@ export const App: React.FC = () => {
   const handleFormSubmit = async (newTodoTitle: string): Promise<void> => {
     const trimmedTitle = newTodoTitle.trim();
 
-    if (!newTodoTitle) {
+    if (!trimmedTitle) {
       setErrorMessage('Title should not be empty');
+      hideError();
 
       return;
     }
@@ -84,12 +89,26 @@ export const App: React.FC = () => {
   };
 
   const deleteTodo = async (todoId: number): Promise<void> => {
+    setErrorMessage('');
+
     try {
       await TodoService.deleteTodo(todoId);
 
       setTodos(currentTodos => currentTodos.filter(todo => todo.id !== todoId));
     } catch (error) {
       setErrorMessage('Unable to delete a todo');
+      throw error;
+    }
+  };
+
+  const handleDeleteAllTodo = async (): Promise<void> => {
+    setErrorMessage('');
+    const filtredResult = filteredTodos(todos, 'completed');
+
+    try {
+      await Promise.all(filtredResult.map(todo => deleteTodo(todo.id)));
+    } catch (error) {
+      setErrorMessage('Unable to delete all todos');
       throw error;
     }
   };
@@ -118,6 +137,7 @@ export const App: React.FC = () => {
         totalItems={todos.length}
         completedTodos={completedTodos}
         tempTodo={tempTodo}
+        handleDeleteAllTodo={handleDeleteAllTodo}
       />
 
       <div

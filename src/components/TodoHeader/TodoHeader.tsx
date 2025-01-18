@@ -14,6 +14,7 @@ type Props = {
   totalItems: number;
   completedTodos: number;
   tempTodo: Todo | null;
+  handleDeleteAllTodo: () => Promise<void>;
 };
 
 export const TodoHeader: React.FC<Props> = ({
@@ -25,6 +26,7 @@ export const TodoHeader: React.FC<Props> = ({
   totalItems,
   completedTodos,
   tempTodo,
+  handleDeleteAllTodo,
 }) => {
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
@@ -79,6 +81,7 @@ export const TodoHeader: React.FC<Props> = ({
           selectFilter={selectFilter}
           totalItems={totalItems}
           completedTodos={completedTodos}
+          handleDeleteAllTodo={handleDeleteAllTodo}
         />
       ) : null}
     </div>

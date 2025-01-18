@@ -6,6 +6,7 @@ type Props = {
   selectFilter: FilterNav;
   totalItems: number;
   completedTodos: number;
+  handleDeleteAllTodo: () => Promise<void>;
 };
 
 export const TodoFooter: React.FC<Props> = ({
@@ -13,7 +14,12 @@ export const TodoFooter: React.FC<Props> = ({
   selectFilter,
   totalItems,
   completedTodos,
+  handleDeleteAllTodo,
 }) => {
+  const deleteAll = () => {
+    handleDeleteAllTodo();
+  };
+
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
@@ -27,6 +33,7 @@ export const TodoFooter: React.FC<Props> = ({
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
         disabled={completedTodos === 0}
+        onClick={deleteAll}
       >
         Clear completed
       </button>
