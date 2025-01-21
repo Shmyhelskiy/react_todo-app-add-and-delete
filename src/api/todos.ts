@@ -20,9 +20,9 @@ export const deleteTodo = (itemId: number) => {
 };
 
 export const updateTodo = ({ id, title, completed, userId }: Todo) => {
-  return client.patch<Todo>(`/todos/${id}}`, {
+  return client.patch<Todo>(`/todos/${id}`, {
     title,
-    completed,
+    completed: !completed,
     userId,
   });
 };

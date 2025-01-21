@@ -101,6 +101,34 @@ export const App: React.FC = () => {
     }
   };
 
+  const toggleTodoStatus = async (todoId: number): Promise<void> => {
+    setErrorMessage('');
+
+    const chosenTodo: Todo | undefined = todos.find(todo => todo.id === todoId);
+
+    if (!chosenTodo) {
+      setErrorMessage('Todo not found');
+
+      return;
+    }
+
+    try {
+      const updateTodo = await TodoService.updateTodo(chosenTodo);
+
+      setTodos(currentTodos => {
+        const newTodos = [...currentTodos];
+        const index = newTodos.findIndex(todo => todo.id === updateTodo.id);
+
+        newTodos.splice(index, 1, updateTodo);
+
+        return newTodos;
+      });
+    } catch (error) {
+      setErrorMessage('Unable to update a todo');
+      throw error;
+    }
+  };
+
   const handleDeleteAllTodo = async (): Promise<void> => {
     setErrorMessage('');
     const filtredResult = filteredTodos(todos, 'completed');
@@ -138,6 +166,7 @@ export const App: React.FC = () => {
         completedTodos={completedTodos}
         tempTodo={tempTodo}
         handleDeleteAllTodo={handleDeleteAllTodo}
+        toggleTodoStatus={toggleTodoStatus}
       />
 
       <div

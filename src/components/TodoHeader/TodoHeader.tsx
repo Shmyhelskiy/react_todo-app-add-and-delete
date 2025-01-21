@@ -15,6 +15,7 @@ type Props = {
   completedTodos: number;
   tempTodo: Todo | null;
   handleDeleteAllTodo: () => Promise<void>;
+  toggleTodoStatus: (todoId: number) => Promise<void>;
 };
 
 export const TodoHeader: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const TodoHeader: React.FC<Props> = ({
   completedTodos,
   tempTodo,
   handleDeleteAllTodo,
+  toggleTodoStatus,
 }) => {
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
@@ -72,7 +74,13 @@ export const TodoHeader: React.FC<Props> = ({
           />
         </form>
       </header>
-      {todos.length !== 0 && <TodoList todos={todos} deleteTodo={deleteTodo} />}
+      {todos.length !== 0 && (
+        <TodoList
+          todos={todos}
+          deleteTodo={deleteTodo}
+          toggleTodoStatus={toggleTodoStatus}
+        />
+      )}
       {tempTodo && <TodoCard todo={tempTodo} />}
 
       {totalItems !== 0 ? (

@@ -5,15 +5,29 @@ import { TodoLoader } from '../TodoLoader/TodoLoader';
 type Props = {
   todo: Todo;
   deleteTodo?: (todoId: number) => void;
+  toggleTodoStatus: (todoId: number) => Promise<void>;
 };
 
-export const TodoCard: React.FC<Props> = ({ todo, deleteTodo = () => {} }) => {
+export const TodoCard: React.FC<Props> = ({
+  todo,
+  deleteTodo = () => { },
+  toggleTodoStatus = () => { },
+}) => {
   const [isActiveLoader, setisActiveLoader] = useState(false);
 
   const handleDelete = async () => {
     setisActiveLoader(true);
     try {
       await deleteTodo?.(todo.id);
+    } finally {
+      setisActiveLoader(false);
+    }
+  };
+
+  const handleTodoStatus = async () => {
+    setisActiveLoader(true);
+    try {
+      await toggleTodoStatus?.(todo.id);
     } finally {
       setisActiveLoader(false);
     }
@@ -27,6 +41,7 @@ export const TodoCard: React.FC<Props> = ({ todo, deleteTodo = () => {} }) => {
           type="checkbox"
           className="todo__status"
           checked={todo.completed}
+          onClick={handleTodoStatus}
         />
       </label>
 
