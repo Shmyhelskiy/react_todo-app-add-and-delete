@@ -31,6 +31,7 @@ export const TodoHeader: React.FC<Props> = ({
   toggleTodoStatus,
 }) => {
   const [newTodoTitle, setNewTodoTitle] = useState('');
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,7 +51,12 @@ export const TodoHeader: React.FC<Props> = ({
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(newTodoTitle).then(reset);
+    setIsDisabled(true);
+    onSubmit(newTodoTitle)
+      .then(reset)
+      .finally(() => {
+        setIsDisabled(false);
+      });
   };
 
   return (
@@ -64,6 +70,7 @@ export const TodoHeader: React.FC<Props> = ({
 
         <form onSubmit={handleFormSubmit}>
           <input
+            disabled={isDisabled}
             data-cy="NewTodoField"
             type="text"
             className="todoapp__new-todo"

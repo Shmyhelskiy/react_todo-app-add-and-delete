@@ -5,7 +5,7 @@ import { TodoLoader } from '../TodoLoader/TodoLoader';
 type Props = {
   todo: Todo;
   deleteTodo?: (todoId: number) => void;
-  toggleTodoStatus: (todoId: number) => Promise<void>;
+  toggleTodoStatus?: (todoId: number) => Promise<void>;
 };
 
 export const TodoCard: React.FC<Props> = ({
