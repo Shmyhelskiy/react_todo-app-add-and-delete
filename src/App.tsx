@@ -1,22 +1,37 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import * as TodoService from './api/todos';
 import { Todo } from './types/Todo';
 import { TodoHeader } from './components/TodoHeader/TodoHeader';
-import { filteredTodos } from './servises/filterTodos';
 import { FilterNav } from './types/Filter';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filterTodos, setFilterTodos] = useState<Todo[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const [completedTodos, setCompletedTodos] = useState(0);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
   const [filter, setFilter] = useState<FilterNav>('all');
+
+  const filteredTodos: Todo[] = useMemo(() => {
+    return todos.filter(todo => {
+      if (filter === 'all') {
+        return true;
+      }
+
+      if (filter === 'completed') {
+        return todo.completed;
+      }
+
+      if (filter === 'active') {
+        return !todo.completed;
+      }
+
+      return true;
+    });
+  }, [todos, filter]);
 
   const hideError = () => {
     setTimeout(() => {
@@ -39,14 +54,6 @@ export const App: React.FC = () => {
 
     fetchTodos();
   }, []);
-
-  useEffect(() => {
-    setFilterTodos(filteredTodos(todos, filter));
-
-    const completeCount = todos.filter(todo => todo.completed).length;
-
-    setCompletedTodos(completeCount);
-  }, [todos, filter]);
 
   const handleFormSubmit = async (newTodoTitle: string): Promise<void> => {
     const trimmedTitle = newTodoTitle.trim();
@@ -131,10 +138,12 @@ export const App: React.FC = () => {
 
   const handleDeleteAllTodo = async (): Promise<void> => {
     setErrorMessage('');
-    const filtredResult = filteredTodos(todos, 'completed');
+    const filtredResult = filteredTodos.filter(todo => {
+      return todo.completed === true;
+    });
 
     try {
-      await Promise.all(filtredResult.map(todo => deleteTodo(todo.id)));
+      await Promise.all(filtredResult.map((todo: Todo) => deleteTodo(todo.id)));
     } catch (error) {
       setErrorMessage('Unable to delete all todos');
       throw error;
@@ -157,13 +166,12 @@ export const App: React.FC = () => {
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
       <TodoHeader
-        todos={filterTodos}
+        allTodos={todos}
+        filtredTodos={filteredTodos}
         onSubmit={handleFormSubmit}
         deleteTodo={deleteTodo}
         handleFilter={handleFilter}
         selectFilter={filter}
-        totalItems={todos.length}
-        completedTodos={completedTodos}
         tempTodo={tempTodo}
         handleDeleteAllTodo={handleDeleteAllTodo}
         toggleTodoStatus={toggleTodoStatus}

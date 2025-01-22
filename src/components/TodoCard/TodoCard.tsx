@@ -58,11 +58,7 @@ export const TodoCard: React.FC<Props> = ({
         ×
       </button>
 
-      {todo.id === 0 ? (
-        <TodoLoader isActiveLoader={true} />
-      ) : (
-        <TodoLoader isActiveLoader={isActiveLoader} />
-      )}
+      <TodoLoader isActiveLoader={todo.id === 0 || isActiveLoader} />
     </div>
   );
 };

@@ -1,29 +1,31 @@
 import { FilterNav } from '../../types/Filter';
-import { TodoNav } from '../TodoLink/TodoNav';
+import { Todo } from '../../types/Todo';
+import { TodoNav } from '../TodoNav/TodoNav';
 
 type Props = {
+  todos: Todo[];
   handleFilter: (filterName: FilterNav) => void;
   selectFilter: FilterNav;
-  totalItems: number;
-  completedTodos: number;
   handleDeleteAllTodo: () => Promise<void>;
 };
 
 export const TodoFooter: React.FC<Props> = ({
+  todos,
   handleFilter,
   selectFilter,
-  totalItems,
-  completedTodos,
   handleDeleteAllTodo,
 }) => {
   const deleteAll = () => {
     handleDeleteAllTodo();
   };
 
+  const activeTodosCount = todos.filter(todo => !todo.completed).length;
+  const completedTodos = todos.filter(todo => todo.completed).length;
+
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {totalItems - completedTodos} items left
+        {activeTodosCount} items left
       </span>
 
       <TodoNav handleFilter={handleFilter} selectFilter={selectFilter} />

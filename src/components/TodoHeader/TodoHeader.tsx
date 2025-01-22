@@ -6,26 +6,24 @@ import { TodoFooter } from '../TodoFooter/TodoFooter';
 import { TodoCard } from '../TodoCard/TodoCard';
 
 type Props = {
-  todos: Todo[];
+  allTodos: Todo[];
+  filtredTodos: Todo[];
   onSubmit: (newTitle: string) => Promise<void>;
   deleteTodo: (todoId: number) => void;
   handleFilter: (filterName: FilterNav) => void;
   selectFilter: FilterNav;
-  totalItems: number;
-  completedTodos: number;
   tempTodo: Todo | null;
   handleDeleteAllTodo: () => Promise<void>;
   toggleTodoStatus: (todoId: number) => Promise<void>;
 };
 
 export const TodoHeader: React.FC<Props> = ({
-  todos,
+  allTodos,
+  filtredTodos,
   onSubmit,
   deleteTodo,
   handleFilter,
   selectFilter,
-  totalItems,
-  completedTodos,
   tempTodo,
   handleDeleteAllTodo,
   toggleTodoStatus,
@@ -81,21 +79,20 @@ export const TodoHeader: React.FC<Props> = ({
           />
         </form>
       </header>
-      {todos.length !== 0 && (
+      {filtredTodos.length !== 0 && (
         <TodoList
-          todos={todos}
+          todos={filtredTodos}
           deleteTodo={deleteTodo}
           toggleTodoStatus={toggleTodoStatus}
         />
       )}
       {tempTodo && <TodoCard todo={tempTodo} />}
 
-      {totalItems !== 0 ? (
+      {allTodos.length !== 0 ? (
         <TodoFooter
+          todos={allTodos}
           handleFilter={handleFilter}
           selectFilter={selectFilter}
-          totalItems={totalItems}
-          completedTodos={completedTodos}
           handleDeleteAllTodo={handleDeleteAllTodo}
         />
       ) : null}

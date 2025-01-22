@@ -1,6 +1,6 @@
 import { Todo } from '../types/Todo';
 
-export const filteredTodos = (todos: Todo[], filter: string) => {
+export const getFiltredTodos = (todos: Todo[], filter: string) => {
   return todos.filter(todo => {
     if (filter === 'active') {
       return !todo.completed;
