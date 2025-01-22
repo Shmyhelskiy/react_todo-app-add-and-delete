@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState } from 'react';
 import { Todo } from '../../types/Todo';
 import { TodoLoader } from '../TodoLoader/TodoLoader';
@@ -10,8 +11,8 @@ type Props = {
 
 export const TodoCard: React.FC<Props> = ({
   todo,
-  deleteTodo = () => { },
-  toggleTodoStatus = () => { },
+  deleteTodo = () => {},
+  toggleTodoStatus = () => {},
 }) => {
   const [isActiveLoader, setisActiveLoader] = useState(false);
 

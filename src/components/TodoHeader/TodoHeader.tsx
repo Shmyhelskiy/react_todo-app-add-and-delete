@@ -3,7 +3,6 @@ import { Todo } from '../../types/Todo';
 import { TodoList } from '../TodoList/TodoList';
 import { FilterNav } from '../../types/Filter';
 import { TodoFooter } from '../TodoFooter/TodoFooter';
-import { TodoCard } from '../TodoCard/TodoCard';
 
 type Props = {
   allTodos: Todo[];
@@ -79,23 +78,23 @@ export const TodoHeader: React.FC<Props> = ({
           />
         </form>
       </header>
-      {filtredTodos.length !== 0 && (
+      {filtredTodos.length > 0 && (
         <TodoList
           todos={filtredTodos}
           deleteTodo={deleteTodo}
           toggleTodoStatus={toggleTodoStatus}
+          tempTodo={tempTodo}
         />
       )}
-      {tempTodo && <TodoCard todo={tempTodo} />}
 
-      {allTodos.length !== 0 ? (
+      {allTodos.length > 0 && (
         <TodoFooter
           todos={allTodos}
           handleFilter={handleFilter}
           selectFilter={selectFilter}
           handleDeleteAllTodo={handleDeleteAllTodo}
         />
-      ) : null}
+      )}
     </div>
   );
 };
